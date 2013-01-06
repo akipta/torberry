@@ -189,6 +189,7 @@ echo "DNSPort "\$IP":53" >> /etc/tor/torrc
 echo "SocksPort "\$IP":9050" >> /etc/tor/torrc
 echo "nameserver 127.0.0.1" > /etc/resolv.conf
 service tor start
+/usr/lib/pymodules/python2.7/TorCtl/torberry-boot.py
 while [ true ]; do
  sleep 1
 done 
@@ -208,8 +209,9 @@ cat << EOF2 > /etc/init.d/rcS
 exec /etc/init.d/rc S > /dev/null 2>&1
 EOF2
 mkdir -p /root/goodies
-wget http://178.162.179.18/torberry-issue -O /etc/torberry-issue
-wget http://178.162.179.18/expandfs -O /root/goodies/expandfs
+wget http://torberry.googlecode.com/svn/trunk/extras/torberry-issue -O /etc/torberry-issue
+wget http://torberry.googlecode.com/svn/trunk/extras/expandfs -O /root/goodies/expandfs
+wget http://torberry.googlecode.com/svn/trunk/extras/torberry-boot.py -O /usr/lib/pymodules/python2.7/TorCtl/torberry-boot.py
 chmod +x /root/goodies/expandfs
 touch /etc/firstrun
 EOF
