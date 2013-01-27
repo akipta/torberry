@@ -15,6 +15,10 @@ install_packages() {
   ssh_in_to_qemu /usr/sbin/chroot /mnt sh -l -ex - <<EOF
 apt-get update
 apt-get install -y --no-install-recommends tor iptables ntpdate netbase tor-arm
+apt-get install -y isc-dhcp-server
+update-rc.d networking disable
+update-rc.d ifplugd disable
+update-rc.d isc-dhcp-server disable 
 update-rc.d tor disable
 ln -s /bin/busybox /sbin/route
 ln -s /bin/busybox /sbin/ifconfig
@@ -212,7 +216,15 @@ mkdir -p /root/goodies
 wget http://torberry.googlecode.com/svn/trunk/extras/torberry-issue -O /etc/torberry-issue
 wget http://torberry.googlecode.com/svn/trunk/extras/expandfs -O /root/goodies/expandfs
 wget http://torberry.googlecode.com/svn/trunk/extras/torberry-boot.py -O /usr/lib/pymodules/python2.7/TorCtl/torberry-boot.py
+wget http://torberry.googlecode.com/svn/trunk/extras/interfaces.1 -O /etc/network/interfaces.1
+wget http://torberry.googlecode.com/svn/trunk/extras/interfaces.2 -O /etc/network/interfaces.2
+wget http://torberry.googlecode.com/svn/trunk/extras/interfaces.3 -O /etc/network/interfaces.3
+wget http://torberry.googlecode.com/svn/trunk/extras/isc-dhcp-server -O /etc/default/isc-dhcp-server
+wget http://torberry.googlecode.com/svn/trunk/extras/dhcpd.conf -O /etc/dhcp/dhcpd.conf
+wget http://torberry.googlecode.com/svn/trunk/extras/torberry.sh -O /etc/torberry.sh
+
 chmod +x /root/goodies/expandfs
+chmod +x /usr/lib/pymodules/python2.7/TorCtl/torberry-boot.py
 touch /etc/firstrun
 EOF
 }
