@@ -221,6 +221,7 @@ wget http://torberry.googlecode.com/svn/trunk/extras/interfaces.2 -O /etc/networ
 wget http://torberry.googlecode.com/svn/trunk/extras/interfaces.3 -O /etc/network/interfaces.3
 wget http://torberry.googlecode.com/svn/trunk/extras/isc-dhcp-server -O /etc/default/isc-dhcp-server
 wget http://torberry.googlecode.com/svn/trunk/extras/dhcpd.conf -O /etc/dhcp/dhcpd.conf
+rm /etc/torberry.sh
 wget http://torberry.googlecode.com/svn/trunk/extras/torberry.sh -O /etc/torberry.sh
 
 chmod +x /root/goodies/expandfs
