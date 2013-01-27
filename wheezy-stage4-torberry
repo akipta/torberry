@@ -223,6 +223,7 @@ wget http://torberry.googlecode.com/svn/trunk/extras/isc-dhcp-server -O /etc/def
 wget http://torberry.googlecode.com/svn/trunk/extras/dhcpd.conf -O /etc/dhcp/dhcpd.conf
 rm /etc/torberry.sh
 wget http://torberry.googlecode.com/svn/trunk/extras/torberry.sh -O /etc/torberry.sh
+wget http://torberry.googlecode.com/svn/trunk/extras/wpa_supplicant.conf -O /etc/wpa_supplicant/wpa_supplicant.conf
 
 chmod +x /root/goodies/expandfs
 chmod +x /usr/lib/pymodules/python2.7/TorCtl/torberry-boot.py
