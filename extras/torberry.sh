@@ -1,6 +1,8 @@
 #!/bin/bash
 # Torberry init script
-#
+# 2013 alex.a.bravo@gmail.com
+# torberry.googlecode.com
+
 if [ "$L1" == "tty1" ]; then
 clear
 cat /etc/torberry-issue
@@ -38,46 +40,113 @@ log_action_begin_msg "Mounting temp dirs..."
 mount -t tmpfs -o size=6M,uid=101,gid=102 tmpfs /var/lib/tor
 mount -t tmpfs -o size=6M,uid=101,gid=4 tmpfs /var/log/tor
 log_action_end_msg 0
+#Common boot ended
+echo "Reading torberry.conf"
+. /etc/torberry.conf
+if [ "$OPERATION_MODE" == "nonphys" ]; then
+netmode=1
+cat << EOF > /etc/network/interfaces
+auto lo
 
-echo "Checking for interfaces"
-intf=$(ls -ltr /proc/sys/net/ipv4/conf | awk '{ print $9 }' | grep -v all | grep -v default | grep -v lo)
-echo $intf
-for i in $intf; do
- if [ "$i" == "eth0" ]; then
-    echo "This is the primary eth0 interface" 
-    netmode=1
- fi
- if [ "$i" == "wlan0" ]; then
-    echo "Detected second interface presence wlan0, switching to physical isolation config" 
-    netmode=2
-    physif="wlan0"
- fi 
- if [ "$i" == "eth1" ]; then
-    echo "Detected second interface presence eth1, switching to physical isolation config" 
-    netmode=2
-    physif="eth1"
- fi 
-done
-if [ $netmode -eq 1 ]; then
-  echo "starting non-physical isolation config"
-  cp /etc/network/interfaces.1 /etc/network/interfaces
-  service networking start
-  service ifplugd start
-fi
-if [ $netmode -eq 2 ]; then
-  echo "starting physical isolation config"
-  if [ "$physif" == "wlan0" ]; then 
-    cp /etc/network/interfaces.2 /etc/network/interfaces
-    service networking start
-    ifconfig -a
-    service isc-dhcp-server start
+iface lo inet loopback
+iface eth0 inet dhcp
+EOF
+echo "Starting in non-physical isolation mode"
+service networking start
+service ifplugd start
+elif [ "$OPERATION_MODE" == "physical-isolation" ]; then
+netmode=2
+  if [ "$UPSTREAM_IP_MODE" == "dhcp" ]; then
+cat << EOF > /etc/network/interfaces
+auto lo
+iface lo inet loopback
+
+auto $UPSTREAM_IF
+iface $UPSTREAM_IF inet dhcp
+EOF
+  elif [ "$UPSTREAM_IP_MODE" == "manual" ]; then
+cat << EOF > /etc/network/interfaces
+auto lo
+iface lo inet loopback
+
+auto $UPSTREAM_IF
+iface $UPSTREAM_IF inet static
+    address $UPSTREAM_IP_IPADDR
+    netmask $UPSTREAM_IP_NETMASK
+    network $UPSTREAM_IP_NETWORK
+    broadcast $UPSTREAM_IP_BROADCAST
+    gateway $UPSTREAM_IP_GATEWAY
+EOF
   fi
-  if [ "$physif" == "eth1" ]; then 
-    cp /etc/network/interfaces.3 /etc/network/interfaces
-    service networking start
-    ifconfig -a
-    service isc-dhcp-server start
+  if [ "$UPSTREAM_WIRELESS" == "true" ]; then
+cat << EOF > /etc/wpa_supplicant/wpa_supplicant.conf
+ctrl_interface=/var/run/wpa_supplicant
+network={
+        ssid="${UPSTREAM_WL_SSID}"
+        proto=$UPSTREAM_WL_PROTO
+        key_mgmt=$UPSTREAM_WL_KEYMGMT
+        psk=$UPSTREAM_WL_PASSWD
+}
+EOF
+wpa_supplicant -B -Dwext -i${UPSTREAM_IF} -c/etc/wpa_supplicant/wpa_supplicant.conf 2>&1 > /dev/null
   fi
+  #Here begins downstream config
+  if [ "$DOWNSTREAM_WIRELESS" == "true" ]; then
+    echo THIS A PLACEHOLDER FOR A FUTURE FUNCTIONALITY
+    echo Currently downstream only allows copper
+  fi
+
+cat << EOF >> /etc/network/interfaces
+
+auto $DOWNSTREAM_IF
+iface $DOWNSTREAM_IF inet static
+   address $DOWNSTREAM_IP_IPADDR
+   netmask $DOWNSTREAM_IP_NETMASK
+   network $DOWNSTREAM_IP_NETWORK
+   broadcast $DOWNSTREAM_IP_BROADCAST
+EOF
+cat << EOF > /etc/default/isc-dhcp-server
+# Defaults for isc-dhcp-server initscript
+# sourced by /etc/init.d/isc-dhcp-server
+# installed at /etc/default/isc-dhcp-server by the maintainer scripts
+
+#
+# This is a POSIX shell fragment
+#
+
+# Path to dhcpd's config file (default: /etc/dhcp/dhcpd.conf).
+#DHCPD_CONF=/etc/dhcp/dhcpd.conf
+
+# Path to dhcpd's PID file (default: /var/run/dhcpd.pid).
+#DHCPD_PID=/var/run/dhcpd.pid
+
+# Additional options to start dhcpd with.
+#       Don't use options -cf or -pf here; use DHCPD_CONF/ DHCPD_PID instead
+#OPTIONS=""
+
+# On what interfaces should the DHCP server (dhcpd) serve DHCP requests?
+#       Separate multiple interfaces with spaces, e.g. "eth0 eth1".
+INTERFACES="${DOWNSTREAM_IF}"
+EOF
+cat << EOF > /etc/dhcp/dhcpd.conf
+ddns-update-style none;                                                   
+option domain-name "example.org";                                         
+option domain-name-servers ns1.example.org, ns2.example.org;              
+default-lease-time 600;                                                   
+max-lease-time 7200;                                                      
+log-facility local7;                                                      
+                                                                         
+subnet $DOWNSTREAM_IP_NETWORK netmask $DOWNSTREAM_IP_NETMASK {                                
+  range $DOWNSTREAM_DHCP_FROM ${DOWNSTREAM_DHCP_TO};                                         
+  option domain-name-servers ${DOWNSTREAM_IP_IPADDR};                                 
+  option routers ${DOWNSTREAM_IP_IPADDR};                                             
+  default-lease-time 600;                                                
+  max-lease-time 7200;                                                   
+}
+EOF
+echo "Starting physical isolation mode"
+service networking start
+service isc-dhcp-server start
 fi
 log_action_begin_msg "Waiting for a valid IP address..."
 
@@ -90,12 +159,12 @@ while [ -z $IP ]; do
 done
 fi
 if [ $netmode -eq 2 ]; then
-IP="172.26.0.1"
+IP=$DOWNSTREAM_IP_IPADDR
 fi
 log_progress_msg "[ $IP ] "
 log_action_end_msg 0
 log_action_begin_msg "Setting current date..."
-ntpdate hora.uv.es 2>&1 > /dev/null
+ntpdate $NTPD 2>&1 > /dev/null
 log_action_end_msg 0
 log_action_begin_msg "Setting iptables rules..."
 
@@ -103,12 +172,12 @@ if [ $netmode -eq 1 ]; then
 NETWORK=$(netstat -nr | tail -1 | awk '{print $1 }')
 fi
 if [ $netmode -eq 2 ]; then
-NETWORK="172.26.0.0"
+NETWORK=$DOWNSTREAM_IP_NETWORK
 fi
 NON_TOR=$NETWORK"/24"
 TOR_UID="debian-tor"
 TRANS_PORT="9040"
-INT_IF="eth0"
+INT_IF=$DOWNSTREAM_IF
 iptables -t nat -A OUTPUT -o lo -j RETURN
 iptables -t nat -A OUTPUT -m owner --uid-owner $TOR_UID -j RETURN
 iptables -t nat -A OUTPUT -p udp --dport 53 -j REDIRECT --to-ports 53

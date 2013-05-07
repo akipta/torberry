@@ -216,14 +216,15 @@ mkdir -p /root/goodies
 wget http://torberry.googlecode.com/svn/trunk/extras/torberry-issue -O /etc/torberry-issue
 wget http://torberry.googlecode.com/svn/trunk/extras/expandfs -O /root/goodies/expandfs
 wget http://torberry.googlecode.com/svn/trunk/extras/torberry-boot.py -O /usr/lib/pymodules/python2.7/TorCtl/torberry-boot.py
-wget http://torberry.googlecode.com/svn/trunk/extras/interfaces.1 -O /etc/network/interfaces.1
-wget http://torberry.googlecode.com/svn/trunk/extras/interfaces.2 -O /etc/network/interfaces.2
-wget http://torberry.googlecode.com/svn/trunk/extras/interfaces.3 -O /etc/network/interfaces.3
-wget http://torberry.googlecode.com/svn/trunk/extras/isc-dhcp-server -O /etc/default/isc-dhcp-server
-wget http://torberry.googlecode.com/svn/trunk/extras/dhcpd.conf -O /etc/dhcp/dhcpd.conf
+#wget http://torberry.googlecode.com/svn/trunk/extras/interfaces.1 -O /etc/network/interfaces.1
+#wget http://torberry.googlecode.com/svn/trunk/extras/interfaces.2 -O /etc/network/interfaces.2
+#wget http://torberry.googlecode.com/svn/trunk/extras/interfaces.3 -O /etc/network/interfaces.3
+#wget http://torberry.googlecode.com/svn/trunk/extras/isc-dhcp-server -O /etc/default/isc-dhcp-server
+#wget http://torberry.googlecode.com/svn/trunk/extras/dhcpd.conf -O /etc/dhcp/dhcpd.conf
 rm /etc/torberry.sh
 wget http://torberry.googlecode.com/svn/trunk/extras/torberry.sh -O /etc/torberry.sh
-wget http://torberry.googlecode.com/svn/trunk/extras/wpa_supplicant.conf -O /etc/wpa_supplicant/wpa_supplicant.conf
+wget http://torberry.googlecode.com/svn/trunk/extras/torberry.conf -O /etc/torberry.sh
+#wget http://torberry.googlecode.com/svn/trunk/extras/wpa_supplicant.conf -O /etc/wpa_supplicant/wpa_supplicant.conf
 
 chmod +x /root/goodies/expandfs
 chmod +x /usr/lib/pymodules/python2.7/TorCtl/torberry-boot.py
