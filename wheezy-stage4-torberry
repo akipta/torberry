@@ -16,6 +16,7 @@ install_packages() {
 apt-get update
 apt-get install -y --no-install-recommends tor iptables ntpdate netbase tor-arm
 apt-get install -y isc-dhcp-server
+apt-get install -y python-cherrypy3 python-jinja2 python-pam
 update-rc.d networking disable
 update-rc.d ifplugd disable
 update-rc.d isc-dhcp-server disable 
@@ -216,16 +217,27 @@ mkdir -p /root/goodies
 wget http://torberry.googlecode.com/svn/trunk/extras/torberry-issue -O /etc/torberry-issue
 wget http://torberry.googlecode.com/svn/trunk/extras/expandfs -O /root/goodies/expandfs
 wget http://torberry.googlecode.com/svn/trunk/extras/torberry-boot.py -O /usr/lib/pymodules/python2.7/TorCtl/torberry-boot.py
-#wget http://torberry.googlecode.com/svn/trunk/extras/interfaces.1 -O /etc/network/interfaces.1
-#wget http://torberry.googlecode.com/svn/trunk/extras/interfaces.2 -O /etc/network/interfaces.2
-#wget http://torberry.googlecode.com/svn/trunk/extras/interfaces.3 -O /etc/network/interfaces.3
-#wget http://torberry.googlecode.com/svn/trunk/extras/isc-dhcp-server -O /etc/default/isc-dhcp-server
-#wget http://torberry.googlecode.com/svn/trunk/extras/dhcpd.conf -O /etc/dhcp/dhcpd.conf
 rm /etc/torberry.sh
 wget http://torberry.googlecode.com/svn/trunk/extras/torberry.sh -O /etc/torberry.sh
-wget http://torberry.googlecode.com/svn/trunk/extras/torberry.conf -O /etc/torberry.sh
-#wget http://torberry.googlecode.com/svn/trunk/extras/wpa_supplicant.conf -O /etc/wpa_supplicant/wpa_supplicant.conf
-
+wget http://torberry.googlecode.com/svn/trunk/extras/torberry.conf -O /etc/torberry.conf
+#wget http://cdn.bitcloud.es/torberry.sh -O /etc/torberry.sh
+#wget http://cdn.bitcloud.es/torberry.conf -O /etc/torberry.conf
+mkdir -p /root/HttpServer/templates
+wget http://torberry.googlecode.com/svn/trunk/extras/web/web.config -O /root/web.config
+wget http://torberry.googlecode.com/svn/trunk/extras/web/HttpServer/__init__.py -O /root/HttpServer/__init__.py
+wget http://torberry.googlecode.com/svn/trunk/extras/web/HttpServer/torcon.py -O /root/HttpServer/torcon.py
+wget http://torberry.googlecode.com/svn/trunk/extras/web/HttpServer/templates/config.tpl -O /root/HttpServer/templates/config.tpl
+wget http://torberry.googlecode.com/svn/trunk/extras/web/HttpServer/templates/control.tpl -O /root/HttpServer/templates/control.tpl
+wget http://torberry.googlecode.com/svn/trunk/extras/web/HttpServer/templates/footer.tpl -O /root/HttpServer/templates/frame.tpl
+wget http://torberry.googlecode.com/svn/trunk/extras/web/HttpServer/templates/frame.tpl -O /root/HttpServer/templates/footer.tpl
+wget http://torberry.googlecode.com/svn/trunk/extras/web/HttpServer/templates/header.tpl -O /root/HttpServer/templates/header.tpl
+wget http://torberry.googlecode.com/svn/trunk/extras/web/HttpServer/templates/login.tpl -O /root/HttpServer/templates/login.tpl
+wget http://torberry.googlecode.com/svn/trunk/extras/web/HttpServer/templates/reset.tpl -O /root/HttpServer/templates/reset.tpl
+wget http://torberry.googlecode.com/svn/trunk/extras/web/HttpServer/templates/status.tpl -O /root/HttpServer/templates/status.tpl
+wget http://torberry.googlecode.com/svn/trunk/extras/web/HttpServer/templates/style.css -O /root/HttpServer/templates/style.css
+wget http://torberry.googlecode.com/svn/trunk/extras/web/HttpServer/templates/sysstatus.tpl -O /root/HttpServer/templates/sysstatus.tpl
+wget http://torberry.googlecode.com/svn/trunk/extras/web/HttpServer/templates/uconfig.tpl -O /root/HttpServer/templates/uconfig.tpl
+wget http://torberry.googlecode.com/svn/trunk/extras/web/HttpServer/templates/ufile.tpl -O /root/HttpServer/templates/ufile.tpl
 chmod +x /root/goodies/expandfs
 chmod +x /usr/lib/pymodules/python2.7/TorCtl/torberry-boot.py
 touch /etc/firstrun
