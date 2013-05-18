@@ -203,6 +203,9 @@ echo "DNSPort "$IP":53" >> /etc/tor/torrc
 echo "SocksPort "$IP":9050" >> /etc/tor/torrc
 echo "nameserver 127.0.0.1" > /etc/resolv.conf
 service tor start
+log_action_begin_msg "Starting cherrypy webserver..."
+PYTHONPATH=/usr/lib/pymodules/python2.7/TorCtl/ cherryd -c /root/web.config -i HttpServer -P /root -d 
+log_action_end_msg 0
 /usr/lib/pymodules/python2.7/TorCtl/torberry-boot.py
 while [ true ]; do
  sleep 1
