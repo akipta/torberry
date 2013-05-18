@@ -228,8 +228,8 @@ wget http://torberry.googlecode.com/svn/trunk/extras/web/HttpServer/__init__.py 
 wget http://torberry.googlecode.com/svn/trunk/extras/web/HttpServer/torcon.py -O /root/HttpServer/torcon.py
 wget http://torberry.googlecode.com/svn/trunk/extras/web/HttpServer/templates/config.tpl -O /root/HttpServer/templates/config.tpl
 wget http://torberry.googlecode.com/svn/trunk/extras/web/HttpServer/templates/control.tpl -O /root/HttpServer/templates/control.tpl
-wget http://torberry.googlecode.com/svn/trunk/extras/web/HttpServer/templates/footer.tpl -O /root/HttpServer/templates/frame.tpl
-wget http://torberry.googlecode.com/svn/trunk/extras/web/HttpServer/templates/frame.tpl -O /root/HttpServer/templates/footer.tpl
+wget http://torberry.googlecode.com/svn/trunk/extras/web/HttpServer/templates/footer.tpl -O /root/HttpServer/templates/footer.tpl
+wget http://torberry.googlecode.com/svn/trunk/extras/web/HttpServer/templates/frame.tpl -O /root/HttpServer/templates/frame.tpl
 wget http://torberry.googlecode.com/svn/trunk/extras/web/HttpServer/templates/header.tpl -O /root/HttpServer/templates/header.tpl
 wget http://torberry.googlecode.com/svn/trunk/extras/web/HttpServer/templates/login.tpl -O /root/HttpServer/templates/login.tpl
 wget http://torberry.googlecode.com/svn/trunk/extras/web/HttpServer/templates/reset.tpl -O /root/HttpServer/templates/reset.tpl
