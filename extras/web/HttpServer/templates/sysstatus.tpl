@@ -5,7 +5,7 @@
 <h3>Kernel:</h3> 
 {{ uname }}
 <h3>Memory:</h3>
-<table>
+<table class="table">
 <tr><td>total</td><td>used</td><td>free</td><td>shared</td><td>buffered</td><td>cached</td></tr>
 <tr>
 {% for item in free.split() %}

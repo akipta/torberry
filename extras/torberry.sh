@@ -37,7 +37,7 @@ if [ -f /etc/resizeflag ]; then
 fi
 echo "Torberry is starting..."
 log_action_begin_msg "Mounting temp dirs..."
-mount -t tmpfs -o size=6M,uid=101,gid=102 tmpfs /var/lib/tor
+mount -t tmpfs -o size=48M,uid=101,gid=102 tmpfs /var/lib/tor
 mount -t tmpfs -o size=6M,uid=101,gid=4 tmpfs /var/log/tor
 log_action_end_msg 0
 #Common boot ended
@@ -202,6 +202,16 @@ echo "TransPort "$IP":9040" >> /etc/tor/torrc
 echo "DNSPort "$IP":53" >> /etc/tor/torrc
 echo "SocksPort "$IP":9050" >> /etc/tor/torrc
 echo "nameserver 127.0.0.1" > /etc/resolv.conf
+if [ "$ONION_ROUTER" == "true" ]; then
+  echo "ORPort "$ONION_ROUTER_ORPORT >> /etc/tor/torrc
+  echo "DirPort "$ONION_ROUTER_DIRPORT >> /etc/tor/torrc
+  echo "Nickname "$ONION_ROUTER_NICKNAME >> /etc/tor/torrc
+  echo "ExitPolicy "$ONION_ROUTER_EXITPOLICY >> /etc/tor/torrc
+  echo "RelayBandwidthRate "$ONION_ROUTER_BWRATE" KB" >> /etc/tor/torrc
+  echo "RelayBandwidthBurst "$ONION_ROUTER_BWBURST" KB" >> /etc/tor/torrc
+  echo "MaxOnionsPending "$ONION_ROUTER_MAXONIONPENDING >> /etc/tor/torrc
+  echo "MaxAdvertisedBandwidth "$ONION_ROUTER_MAXADBW" KB" >> /etc/tor/torrc
+fi
 service tor start
 log_action_begin_msg "Starting cherrypy webserver..."
 PYTHONPATH=/usr/lib/pymodules/python2.7/TorCtl/ cherryd -c /root/web.config -i HttpServer -P /root -d 

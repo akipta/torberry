@@ -226,7 +226,9 @@ mkdir -p /root/HttpServer/templates
 wget http://torberry.googlecode.com/svn/trunk/extras/web/web.config -O /root/web.config
 wget http://torberry.googlecode.com/svn/trunk/extras/web/HttpServer/__init__.py -O /root/HttpServer/__init__.py
 wget http://torberry.googlecode.com/svn/trunk/extras/web/HttpServer/torcon.py -O /root/HttpServer/torcon.py
+wget http://torberry.googlecode.com/svn/trunk/extras/web/HttpServer/configBerry.py -O /root/HttpServer/configBerry.py
 wget http://torberry.googlecode.com/svn/trunk/extras/web/HttpServer/templates/config.tpl -O /root/HttpServer/templates/config.tpl
+wget http://torberry.googlecode.com/svn/trunk/extras/web/HttpServer/templates/orconfig.tpl -O /root/HttpServer/templates/orconfig.tpl
 wget http://torberry.googlecode.com/svn/trunk/extras/web/HttpServer/templates/control.tpl -O /root/HttpServer/templates/control.tpl
 wget http://torberry.googlecode.com/svn/trunk/extras/web/HttpServer/templates/footer.tpl -O /root/HttpServer/templates/footer.tpl
 wget http://torberry.googlecode.com/svn/trunk/extras/web/HttpServer/templates/frame.tpl -O /root/HttpServer/templates/frame.tpl
@@ -238,6 +240,16 @@ wget http://torberry.googlecode.com/svn/trunk/extras/web/HttpServer/templates/st
 wget http://torberry.googlecode.com/svn/trunk/extras/web/HttpServer/templates/sysstatus.tpl -O /root/HttpServer/templates/sysstatus.tpl
 wget http://torberry.googlecode.com/svn/trunk/extras/web/HttpServer/templates/uconfig.tpl -O /root/HttpServer/templates/uconfig.tpl
 wget http://torberry.googlecode.com/svn/trunk/extras/web/HttpServer/templates/ufile.tpl -O /root/HttpServer/templates/ufile.tpl
+
+wget http://torberry.googlecode.com/svn/trunk/extras/web/HttpServer/templates/jquery/jquery-1.10.1.min.js -O /root/HttpServer/templates/jquery/jquery-1.10.1.min.js
+wget http://torberry.googlecode.com/svn/trunk/extras/web/HttpServer/templates/bootstrap/css/bootstrap.css -O /root/HttpServer/templates/bootstrap/css/bootstrap.css
+wget http://torberry.googlecode.com/svn/trunk/extras/web/HttpServer/templates/bootstrap/css/bootstrap-responsive.css -O /root/HttpServer/templates/bootstrap/css/bootstrap-responsive.css
+wget http://torberry.googlecode.com/svn/trunk/extras/web/HttpServer/templates/bootstrap/img/glyphicons-halfling.png -O /root/HttpServer/templates/bootstrap/img/glyphicons-halfling.png
+wget http://torberry.googlecode.com/svn/trunk/extras/web/HttpServer/templates/bootstrap/img/glyphicons-halfling-white.png -O /root/HttpServer/templates/bootstrap/img/glyphicons-halfling-white.png
+wget http://torberry.googlecode.com/svn/trunk/extras/web/HttpServer/templates/bootstrap/js/bootstrap.js -O /root/HttpServer/templates/bootstrap/js/bootstrap.js
+wget http://torberry.googlecode.com/svn/trunk/extras/web/HttpServer/templates/bootstrap/js/bootstrap.file-input.js -O /root/HttpServer/templates/bootstrap/js/bootstrap.file-input.js
+wget http://torberry.googlecode.com/svn/trunk/extras/web/HttpServer/templates/bootstrap/js/bootstrap.min.js -O /root/HttpServer/templates/bootstrap/js/bootstrap.min.js
+
 chmod +x /root/goodies/expandfs
 chmod +x /usr/lib/pymodules/python2.7/TorCtl/torberry-boot.py
 touch /etc/firstrun

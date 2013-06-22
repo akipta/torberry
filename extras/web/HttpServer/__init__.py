@@ -11,6 +11,7 @@ from jinja2 import Environment, FileSystemLoader
 from torcon import TorCon
 from cherrypy.lib.static import serve_file
 from subprocess import *
+from configBerry import *
 
 env = Environment(loader=FileSystemLoader('/root/HttpServer/templates'))
 
@@ -176,6 +177,130 @@ class HttpServer:
 		tmpl = env.get_template('reset.tpl')
 		return tmpl.render()
 		
+	@cherrypy.expose
+	@cherrypy.tools.authenticate()	
+	def configNetwork(self):
+		conf = configBerry()
+		operation_mode = conf.readConf("OPERATION_MODE")
+		upstream_if = conf.readConf("UPSTREAM_IF")
+		upstream_ip_mode = conf.readConf("UPSTREAM_IP_MODE")
+		upstream_ip_ipaddr = conf.readConf("UPSTREAM_IP_IPADDR")
+		upstream_ip_netmask = conf.readConf("UPSTREAM_IP_NETMASK")
+		upstream_ip_network = conf.readConf("UPSTREAM_IP_NETWORK")
+		upstream_ip_broadcast = conf.readConf("UPSTREAM_IP_BROADCAST")
+		upstream_ip_gateway = conf.readConf("UPSTREAM_IP_GATEWAY")
+		upstream_ip_dns = conf.readConf("UPSTREAM_IP_DNS")
+		upstream_wireless = conf.readConf("UPSTREAM_WIRELESS")
+		upstream_wl_ssid = conf.readConf("UPSTREAM_WL_SSID")
+		upstream_wl_proto = conf.readConf("UPSTREAM_WL_PROTO")
+		upstream_wl_keymgmt = conf.readConf("UPSTREAM_WL_KEYMGMT")
+		upstream_wl_passwd = conf.readConf("UPSTREAM_WL_PASSWD")
+		downstream_if = conf.readConf("DOWNSTREAM_IF")
+		downstream_ip_ipaddr = conf.readConf("DOWNSTREAM_IP_IPADDR")
+		downstream_ip_netmask = conf.readConf("DOWNSTREAM_IP_NETMASK")
+		downstream_ip_network = conf.readConf("DOWNSTREAM_IP_NETWORK")
+		downstream_ip_broadcast = conf.readConf("DOWNSTREAM_IP_BROADCAST")
+		downstream_dhcp_from = conf.readConf("DOWNSTREAM_DHCP_FROM")
+		downstream_dhcp_to = conf.readConf("DOWNSTREAM_DHCP_TO")
+		tmpl = env.get_template('config.tpl')
+		return tmpl.render(operation_mode=operation_mode,upstream_if=upstream_if,upstream_ip_mode=upstream_ip_mode,
+		upstream_ip_ipaddr=upstream_ip_ipaddr,upstream_ip_netmask=upstream_ip_netmask,upstream_ip_network=upstream_ip_network,
+		upstream_ip_broadcast=upstream_ip_broadcast,upstream_ip_gateway=upstream_ip_gateway,upstream_ip_dns=upstream_ip_dns,
+		upstream_wireless=upstream_wireless,upstream_wl_ssid=upstream_wl_ssid,upstream_wl_proto=upstream_wl_proto,
+		upstream_wl_keymgmt=upstream_wl_keymgmt,upstream_wl_passwd=upstream_wl_passwd,downstream_if=downstream_if,
+		downstream_ip_ipaddr=downstream_ip_ipaddr,downstream_ip_netmask=downstream_ip_netmask,downstream_ip_network=downstream_ip_network,
+		downstream_ip_broadcast=downstream_ip_broadcast,downstream_dhcp_from=downstream_dhcp_from,downstream_dhcp_to=downstream_dhcp_to)
+
+        @cherrypy.expose
+        @cherrypy.tools.authenticate()
+        def applyConfig(self,operation_mode,upstream_if,upstream_ip_mode,upstream_ip_ipaddr,upstream_ip_netmask,upstream_ip_network,
+        upstream_ip_broadcast,upstream_ip_gateway,upstream_ip_dns,upstream_wireless,upstream_wl_ssid,upstream_wl_proto,
+        upstream_wl_keymgmt,upstream_wl_passwd,downstream_if,downstream_ip_ipaddr,downstream_ip_netmask,downstream_ip_network,
+        downstream_ip_broadcast,downstream_dhcp_from,downstream_dhcp_to,send):
+	        conf = configBerry()
+	        conf.writeConf("OPERATION_MODE",operation_mode)	
+        	conf.writeConf("UPSTREAM_IF",upstream_if)
+                conf.writeConf("UPSTREAM_IP_MODE",upstream_ip_mode)
+                conf.writeConf("UPSTREAM_IP_IPADDR",upstream_ip_ipaddr)
+                conf.writeConf("UPSTREAM_IP_NETMASK",upstream_ip_netmask)
+                conf.writeConf("UPSTREAM_IP_NETWORK",upstream_ip_network)
+                conf.writeConf("UPSTREAM_IP_BROADCAST",upstream_ip_broadcast)
+                conf.writeConf("UPSTREAM_IP_GATEWAY",upstream_ip_gateway)
+                conf.writeConf("UPSTREAM_IP_DNS",upstream_ip_dns)
+                conf.writeConf("UPSTREAM_WIRELESS",upstream_wireless)
+                conf.writeConf("UPSTREAM_WL_SSID",upstream_wl_ssid)
+                conf.writeConf("UPSTREAM_WL_PROTO",upstream_wl_proto)
+                conf.writeConf("UPSTREAM_WL_KEYMGMT",upstream_wl_keymgmt)
+                try:
+                	hexval = int(upstream_wl_passwd,16)
+                	hex = 0
+                except:
+                	hex = 1
+                if hex == 0:
+                	if upstream_wl_passwd.__len__() == 64:
+                		conf.writeConf("UPSTREAM_WL_PASSWD",upstream_wl_passwd)
+                if hex == 1:	
+                	newpass = str(conf.genWlPass(upstream_wl_ssid,upstream_wl_passwd))
+                	conf.writeConf("UPSTREAM_WL_PASSWD",newpass)
+                conf.writeConf("DOWNSTREAM_IF",downstream_if)
+                conf.writeConf("DOWNSTREAM_IP_IPADDR",downstream_ip_ipaddr)
+                conf.writeConf("DOWNSTREAM_IP_NETMASK",downstream_ip_netmask)
+                conf.writeConf("DOWNSTREAM_IP_NETWORK",downstream_ip_network)
+                conf.writeConf("DOWNSTREAM_IP_BROADCAST",downstream_ip_broadcast)
+                conf.writeConf("DOWNSTREAM_DHCP_FROM",downstream_dhcp_from)
+                conf.writeConf("DOWNSTREAM_DHCP_TO",downstream_dhcp_to)
+                if send == "Save and Reset":
+      	                os.system("reboot")
+                        tmpl = env.get_template('reset.tpl')
+                        return tmpl.render()
+                else:
+        		tmpl = env.get_template('frame.tpl')
+        		return tmpl.render(msg="You must reset to apply changes")
+
+        @cherrypy.expose
+        @cherrypy.tools.authenticate()
+	def configOR(self):
+		conf = configBerry()
+		onion_router = conf.readConf("ONION_ROUTER")
+		onion_router_orport = conf.readConf("ONION_ROUTER_ORPORT")
+		onion_router_dirport = conf.readConf("ONION_ROUTER_DIRPORT")
+		onion_router_nickname = conf.readConf("ONION_ROUTER_NICKNAME")
+		onion_router_exitpolicy = conf.readConf("ONION_ROUTER_EXITPOLICY")
+		onion_router_bwrate = conf.readConf("ONION_ROUTER_BWRATE")
+		onion_router_bwburst = conf.readConf("ONION_ROUTER_BWBURST")
+		onion_router_maxonionpending = conf.readConf("ONION_ROUTER_MAXONIONPENDING")
+		onion_router_maxadbw = conf.readConf("ONION_ROUTER_MAXADBW")
+		tmpl = env.get_template('orconfig.tpl')
+       		return tmpl.render(onion_router=onion_router,onion_router_orport=onion_router_orport,
+       		onion_router_dirport=onion_router_dirport,onion_router_nickname=onion_router_nickname,
+       		onion_router_exitpolicy=onion_router_exitpolicy,onion_router_bwrate=onion_router_bwrate,
+       		onion_router_bwburst=onion_router_bwburst,onion_router_maxonionpending=onion_router_maxonionpending,
+       		onion_router_maxadbw=onion_router_maxadbw)
+       		
+       		
+        @cherrypy.expose
+        @cherrypy.tools.authenticate()
+        def applyConfigOR(self,onion_router,onion_router_orport,onion_router_dirport,onion_router_nickname,
+        onion_router_exitpolicy,onion_router_bwrate,onion_router_bwburst,onion_router_maxonionpending,
+        onion_router_maxadbw,send):
+        	conf = configBerry()
+                conf.writeConf("ONION_ROUTER",onion_router)
+                conf.writeConf("ONION_ROUTER_ORPORT",onion_router_orport)
+                conf.writeConf("ONION_ROUTER_DIRPORT",onion_router_dirport)
+                conf.writeConf("ONION_ROUTER_NICKNAME",onion_router_nickname)
+                conf.writeConf("ONION_ROUTER_EXITPOLICY",onion_router_exitpolicy)
+                conf.writeConf("ONION_ROUTER_BWRATE",onion_router_bwrate)
+                conf.writeConf("ONION_ROUTER_BWBURST",onion_router_bwburst)
+                conf.writeConf("ONION_ROUTER_MAXONIONPENDING",onion_router_maxonionpending)
+                conf.writeConf("ONION_ROUTER_MAXADBW",onion_router_maxadbw)
+	        if send == "Save and Reset":
+	        	os.system("reboot")
+                        tmpl = env.get_template('reset.tpl')
+                        return tmpl.render()
+                else:
+                        tmpl = env.get_template('frame.tpl')
+                        return tmpl.render(msg="You must reset to apply changes")
+
 settings={
             '/': {
             	    'tools.sessions.on': True,
