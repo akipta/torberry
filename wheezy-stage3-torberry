@@ -335,7 +335,8 @@ EOF
 
 install_memcpy_replacement() {
   onvm_chroot sh -l -e <<\EOF
-apt-get install -y raspi-copies-and-fills
+echo "this a fix"
+#apt-get install -y raspi-copies-and-fills
 EOF
 }
 

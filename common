@@ -108,7 +108,8 @@ else
 fi
 #cp /usr/share/doc/raspi-config/sample_profile_d.sh /etc/profile.d/raspi-config.sh
 mv /etc/torberry.sh /etc/profile.d/torberry.sh
-#apt-get update
+apt-get update
+apt-get install -y raspi-copies-and-fills
 #/etc/init.d/fake-hwclock stop # save current time
 #rm /usr/bin/raspi-config
 #cd /usr/bin
@@ -134,6 +135,7 @@ EOF
 disable_starting_services() {
   ssh_in_to_qemu /usr/sbin/chroot /mnt sh -ex - <<EOF
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+echo "Debugging printf"
 printf '#!/bin/sh\nexit 101\n' > /usr/sbin/policy-rc.d
 chmod 755 /usr/sbin/policy-rc.d
 EOF
